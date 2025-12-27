@@ -81,7 +81,7 @@ async function test_invalid_playground_parameters(page: Page): Promise<void> {
     payload.url_template = "https://python.example.com?code={code}";
     payload.pygments_language = "py!@%&";
     status = await _add_playground_and_return_status(page, payload);
-    assert.strictEqual(status, "Failed: Invalid characters in pygments language");
+    assert.strictEqual(status, "Failed: Invalid character: '!'");
 }
 
 async function test_successful_playground_deletion(page: Page): Promise<void> {
