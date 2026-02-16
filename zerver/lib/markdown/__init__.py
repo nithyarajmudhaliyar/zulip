@@ -83,6 +83,7 @@ html_safelisted_schemes = (
     "magnet",
     "mailto",
     "matrix",
+    "obsidian",
     "mms",
     "news",
     "nntp",
@@ -256,7 +257,7 @@ def get_web_link_regex() -> Pattern[str]:
                              # (Double-negative lookbehind to allow start-of-string)
         (?P<url>             # Main group
             (?:(?:           # Domain part
-                https?://[\w.:@-]+?   # If it has a protocol, anything goes.
+                (?:https?|obsidian)://[\w.:@-]+?   # If it has a protocol, anything goes.
                |(?:                   # Or, if not, be more strict to avoid false-positives
                     (?:[\w-]+\.)+     # One or more domain components, separated by dots
                     (?:{tlds})        # TLDs
