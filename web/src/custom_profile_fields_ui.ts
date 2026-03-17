@@ -40,6 +40,7 @@ export function append_custom_profile_fields(element_id: string, user_id: number
         [all_field_types.EXTERNAL_ACCOUNT.id, "text"],
         [all_field_types.URL.id, "url"],
         [all_field_types.PRONOUNS.id, "text"],
+        [all_field_types.PHONE_NUMBER.id, "text"],
     ]);
 
     for (const field of all_custom_fields) {
@@ -73,6 +74,7 @@ export function append_custom_profile_fields(element_id: string, user_id: number
             is_date_field: field.type === all_field_types.DATE.id,
             is_url_field: field.type === all_field_types.URL.id,
             is_pronouns_field: field.type === all_field_types.PRONOUNS.id,
+            is_phone_number_field: field.type === all_field_types.PHONE_NUMBER.id,
             is_select_field,
             field_choices,
             for_manage_user_modal: element_id === "#edit-user-form .custom-profile-field-form",
@@ -102,7 +104,26 @@ function update_custom_profile_field(
     const $spinner_element = $(
         `.custom_user_field[data-field-id="${CSS.escape(field.id.toString())}"] .custom-field-status`,
     ).expectOne();
-    settings_ui.do_settings_change(method, "/json/users/me/profile_data", {data}, $spinner_element);
+    settings_ui.do_settings_change(
+        method,
+        "/json/users/me/profile_data",
+        {data},
+        $spinner_element,
+        {
+            success_continuation() {
+                const canonical_value = people.get_custom_profile_data(
+                    current_user.user_id,
+                    field.id,
+                )?.value;
+                if (canonical_value !== undefined && typeof canonical_value === "string") {
+                    $spinner_element
+                        .closest(".custom_user_field")
+                        .find(".custom_user_field_value")
+                        .val(canonical_value);
+                }
+            },
+        },
+    );
 }
 
 export function update_user_custom_profile_fields(
