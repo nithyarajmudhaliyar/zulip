@@ -721,7 +721,7 @@ class UpdateCustomProfileFieldTest(CustomProfileFieldTestCase):
         self.login("iago")
         realm = get_realm("zulip")
 
-        field = CustomProfileField.objects.get(name="Phone number", realm=realm)
+        field = CustomProfileField.objects.get(name="Favorite food", realm=realm)
 
         result = self.client_patch(
             f"/json/realm/profile_fields/{field.id}",
@@ -747,12 +747,12 @@ class UpdateCustomProfileFieldTest(CustomProfileFieldTestCase):
         result = self.client_patch(
             f"/json/realm/profile_fields/{field.id}",
             info={
-                "name": "Number",
+                "name": "Food",
             },
         )
 
         field.refresh_from_db()
-        self.assertEqual(field.name, "Number")
+        self.assertEqual(field.name, "Food")
         self.assertEqual(field.use_for_user_matching, True)
         self.assert_json_success(result)
 
